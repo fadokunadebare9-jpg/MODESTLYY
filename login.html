@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sign In — Modestly</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --black:#0A0A0A;--charcoal:#1C1C1C;--mid:#5A5A5A;--grey:#8A8A8A;--light:#C8C8C8;
+  --gold:#1C1C1C;
+  --off-white:#F5F4F2;--border:rgba(0,0,0,0.09);--border-strong:rgba(0,0,0,0.15);
+  --radius:10px;--radius-sm:6px;--radius-pill:100px;
+  --t:.22s cubic-bezier(.4,0,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-font-smoothing:antialiased;height:100%}
+body{
+  background:#fff;color:var(--black);
+  font-family:'DM Sans',sans-serif;font-weight:300;line-height:1.6;
+  min-height:100vh;display:grid;grid-template-columns:1fr 1fr;
+}
+a{text-decoration:none;color:inherit}
+
+/* LEFT PANEL */
+.left-panel{
+  background:var(--charcoal);
+  display:flex;flex-direction:column;justify-content:space-between;
+  padding:3rem;position:relative;overflow:hidden;
+}
+.left-panel::before{
+  content:'';position:absolute;inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);
+  background-size:48px 48px;
+}
+.panel-ring{position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.06);pointer-events:none}
+.ring-1{width:500px;height:500px;bottom:-160px;left:-140px}
+.ring-2{width:300px;height:300px;bottom:-60px;left:-40px}
+
+.panel-top{position:relative;z-index:1}
+.logo{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:400;letter-spacing:.28em;text-transform:uppercase;color:#fff;display:inline-block}
+.logo-rule{display:block;width:2rem;height:1px;background:var(--gold);margin-top:.6rem;opacity:.65}
+
+.panel-body{position:relative;z-index:1;margin:auto 0}
+.panel-badge{display:inline-flex;align-items:center;gap:.5rem;font-size:.54rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:1.8rem}
+.badge-dot{width:4px;height:4px;border-radius:50%;background:var(--gold);flex-shrink:0;animation:breathe 2.4s ease-in-out infinite}
+@keyframes breathe{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.2;transform:scale(.6)}}
+.panel-heading{font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,3.5vw,3rem);font-weight:300;color:#fff;line-height:1.05;margin-bottom:1.2rem}
+.panel-heading em{font-style:italic;color:var(--gold);opacity:.8}
+.panel-sub{font-size:.84rem;color:rgba(255,255,255,.35);line-height:1.85;max-width:320px}
+.panel-sub strong{color:rgba(255,255,255,.6);font-weight:400}
+
+.panel-bottom{position:relative;z-index:1}
+.panel-stats{display:flex;gap:2rem;flex-wrap:wrap}
+.p-stat{display:flex;flex-direction:column;gap:.15rem}
+.p-stat strong{font-size:.86rem;font-weight:500;color:rgba(255,255,255,.7);letter-spacing:-.01em}
+.p-stat span{font-size:.6rem;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.25)}
+.p-stat-rule{width:1px;height:28px;background:rgba(255,255,255,.08);align-self:center}
+
+/* RIGHT PANEL */
+.right-panel{
+  display:flex;align-items:center;justify-content:center;
+  padding:3rem 2rem;background:#fff;
+}
+.form-wrap{width:100%;max-width:380px}
+
+.form-top{margin-bottom:2.4rem}
+.form-eyebrow{font-size:.57rem;letter-spacing:.22em;text-transform:uppercase;color:var(--grey);margin-bottom:.5rem}
+.form-title{font-family:'Cormorant Garamond',serif;font-size:2.3rem;font-weight:300;line-height:1.05;color:var(--black)}
+.form-title em{font-style:italic;color:var(--mid)}
+.form-subtitle{font-size:.82rem;color:var(--grey);margin-top:.5rem;line-height:1.7}
+
+/* ALERT */
+.alert{
+  display:none;align-items:center;gap:.7rem;
+  background:#fef2f2;border:1px solid #fecaca;
+  border-radius:var(--radius-sm);padding:.85rem 1rem;
+  margin-bottom:1.2rem;font-size:.78rem;color:#b91c1c;
+}
+.alert svg{flex-shrink:0}
+.alert.show{display:flex}
+
+.field{display:flex;flex-direction:column;gap:.38rem;margin-bottom:1rem}
+.field label{font-size:.63rem;letter-spacing:.1em;text-transform:uppercase;color:var(--mid);font-weight:400}
+.field input{
+  width:100%;border:1.5px solid var(--border-strong);border-radius:var(--radius-sm);
+  padding:.78rem 1rem;font-family:'DM Sans',sans-serif;font-size:.84rem;font-weight:300;
+  color:var(--black);background:#fff;outline:none;
+  transition:border-color var(--t),box-shadow var(--t);
+  -webkit-appearance:none;
+  appearance:none;
+}
+.field input::placeholder{color:var(--light)}
+.field input:focus{border-color:var(--black);box-shadow:0 0 0 3px rgba(10,10,10,.06)}
+.field input.error{border-color:#c0392b}
+
+.password-wrap{position:relative}
+.password-wrap input{padding-right:2.8rem}
+.toggle-pw{
+  position:absolute;right:.85rem;top:50%;transform:translateY(-50%);
+  background:none;border:none;cursor:pointer;color:var(--light);padding:.2rem;
+  transition:color var(--t);display:flex;align-items:center;
+}
+.toggle-pw:hover{color:var(--mid)}
+
+.field-meta{display:flex;justify-content:space-between;align-items:center}
+.field-meta label{margin-bottom:0}
+.forgot-link{font-size:.67rem;color:var(--grey);border-bottom:1px solid var(--border);padding-bottom:.05rem;transition:color var(--t),border-color var(--t)}
+.forgot-link:hover{color:var(--black);border-color:var(--black)}
+
+.field-error{font-size:.67rem;color:#c0392b;margin-top:.2rem;display:none}
+.field input.error ~ .field-error{display:block}
+
+.btn-submit{
+  width:100%;background:var(--black);color:#fff;
+  font-family:'DM Sans',sans-serif;font-weight:500;font-size:.72rem;
+  letter-spacing:.1em;text-transform:uppercase;
+  padding:1rem;border-radius:var(--radius-sm);border:none;cursor:pointer;
+  transition:opacity var(--t),transform var(--t);margin-top:.6rem;
+  display:flex;align-items:center;justify-content:center;gap:.6rem;
+}
+.btn-submit:hover{opacity:.78;transform:translateY(-1px)}
+.btn-submit:active{transform:translateY(0)}
+.btn-submit .spinner{display:none;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+.btn-submit.loading .spinner{display:block}
+.btn-submit.loading .btn-text{opacity:.5}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.register-link{text-align:center;margin-top:1.6rem;font-size:.78rem;color:var(--grey)}
+.register-link a{color:var(--black);font-weight:400;border-bottom:1px solid var(--border-strong);padding-bottom:.05rem;transition:border-color var(--t)}
+.register-link a:hover{border-color:var(--black)}
+
+/* FORGOT PASSWORD OVERLAY */
+.forgot-overlay{
+  display:none;position:fixed;inset:0;z-index:9000;
+  align-items:center;justify-content:center;
+}
+.forgot-backdrop{position:absolute;inset:0;background:rgba(10,10,10,.5);backdrop-filter:blur(6px)}
+.forgot-modal{
+  position:relative;z-index:1;background:#fff;border-radius:14px;
+  padding:2.4rem;max-width:380px;width:90%;
+  box-shadow:0 24px 64px rgba(0,0,0,.16);
+  animation:modalIn .28s cubic-bezier(.4,0,.2,1);
+}
+@keyframes modalIn{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:none}}
+.forgot-modal .close-btn{
+  position:absolute;top:1rem;right:1.1rem;
+  background:none;border:none;cursor:pointer;
+  color:var(--grey);font-size:1rem;padding:.2rem .4rem;line-height:1;
+  transition:color var(--t);
+}
+.forgot-modal .close-btn:hover{color:var(--black)}
+.forgot-modal h3{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:300;margin-bottom:.4rem}
+.forgot-modal h3 em{font-style:italic;color:var(--mid)}
+.forgot-modal p{font-size:.8rem;color:var(--grey);line-height:1.75;margin-bottom:1.4rem}
+.forgot-modal .field{margin-bottom:1.2rem}
+.forgot-success{display:none;text-align:center;padding:.5rem 0}
+.forgot-success svg{margin-bottom:.8rem}
+.forgot-success p{font-size:.82rem;color:var(--grey);line-height:1.75}
+.forgot-success strong{color:var(--charcoal);font-weight:400}
+
+/* MOBILE */
+@media(max-width:760px){
+  body{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  .left-panel{padding:2rem;min-height:auto}
+  .panel-body{margin:1.8rem 0 1.4rem}
+  .panel-heading{font-size:2rem}
+  .panel-sub{display:none}
+  .right-panel{padding:2.5rem 1.5rem;align-items:flex-start}
+  .form-wrap{max-width:100%}
+}
+
+/* FADE IN */
+.fade-up{opacity:0;transform:translateY(16px);animation:fadeUp .55s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes fadeUp{to{opacity:1;transform:none}}
+.d1{animation-delay:.07s}.d2{animation-delay:.14s}.d3{animation-delay:.21s}.d4{animation-delay:.28s}
+</style>
+</head>
+<body>
+
+<!-- LEFT PANEL -->
+<div class="left-panel">
+  <div class="panel-ring ring-1"></div>
+  <div class="panel-ring ring-2"></div>
+
+  <div class="panel-top">
+    <a href="index.html" class="logo">Modestly<span class="logo-rule"></span></a>
+  </div>
+
+  <div class="panel-body">
+    <div class="panel-badge"><div class="badge-dot"></div>Welcome back</div>
+    <h2 class="panel-heading">Good to have<br/>you <em>back.</em></h2>
+    <p class="panel-sub">
+      Your next favourite piece is waiting.
+      <strong>Nigerian designers. Doorstep delivery.</strong>
+      Try it on before you pay — always.
+    </p>
+  </div>
+
+  <div class="panel-bottom">
+    <div class="panel-stats">
+      <div class="p-stat">
+        <strong>4 days</strong>
+        <span>Delivery window</span>
+      </div>
+      <div class="p-stat-rule"></div>
+      <div class="p-stat">
+        <strong>Escrow</strong>
+        <span>Protected payments</span>
+      </div>
+      <div class="p-stat-rule"></div>
+      <div class="p-stat">
+        <strong>335 Cities</strong>
+        <span>Across Nigeria</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RIGHT PANEL -->
+<div class="right-panel">
+  <div class="form-wrap">
+
+    <div class="form-top fade-up">
+      <p class="form-eyebrow">Sign in</p>
+      <h1 class="form-title">Welcome<br/><em>back.</em></h1>
+      <p class="form-subtitle">Enter your details to continue.</p>
+    </div>
+
+    <div class="alert" id="login-alert">
+      <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke="#b91c1c" stroke-width="1.5"/><path d="M10 6v4M10 13.5v.5" stroke="#b91c1c" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <span id="alert-msg">Incorrect email or password. Please try again.</span>
+    </div>
+
+    <form id="login-form" novalidate>
+
+      <div class="field fade-up d1">
+        <label for="email">Email address</label>
+        <input type="email" id="email" name="email" placeholder="you@example.com" autocomplete="email"/>
+        <span class="field-error">Enter a valid email</span>
+      </div>
+
+      <div class="field fade-up d2">
+        <div class="field-meta">
+          <label for="password">Password</label>
+          <a href="#" class="forgot-link" onclick="openForgot(event)">Forgot password?</a>
+        </div>
+        <div class="password-wrap">
+          <input type="password" id="password" name="password" placeholder="Your password" autocomplete="current-password"/>
+          <button type="button" class="toggle-pw" aria-label="Show password" onclick="togglePw(this)">
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none"><path d="M2 10s3-6 8-6 8 6 8 6-3 6-8 6-8-6-8-6z" stroke="currentColor" stroke-width="1.4"/><circle cx="10" cy="10" r="2.5" stroke="currentColor" stroke-width="1.4"/></svg>
+          </button>
+        </div>
+        <span class="field-error">Password is required</span>
+      </div>
+
+      <button type="submit" class="btn-submit fade-up d3">
+        <div class="spinner"></div>
+        <span class="btn-text">Sign In</span>
+      </button>
+
+    </form>
+
+    <p class="register-link fade-up d4">Don't have an account? <a href="register.html">Join us</a></p>
+
+  </div>
+</div>
+
+<!-- FORGOT PASSWORD MODAL -->
+<div class="forgot-overlay" id="forgot-overlay">
+  <div class="forgot-backdrop" onclick="closeForgot()"></div>
+  <div class="forgot-modal">
+    <button class="close-btn" onclick="closeForgot()">✕</button>
+
+    <div id="forgot-form-view">
+      <h3>Reset your<br/><em>password.</em></h3>
+      <p>Enter the email linked to your account and we'll send you a reset link.</p>
+      <div class="field">
+        <label for="reset-email">Email address</label>
+        <input type="email" id="reset-email" placeholder="you@example.com"/>
+        <span class="field-error" id="reset-error" style="display:none">Enter a valid email</span>
+      </div>
+      <button class="btn-submit" id="reset-btn" onclick="submitReset()" style="margin-top:0">
+        <div class="spinner"></div>
+        <span class="btn-text">Send Reset Link</span>
+      </button>
+    </div>
+
+    <div class="forgot-success" id="forgot-success-view">
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="19" stroke="#27ae60" stroke-width="1.5"/><path d="M12 20l6 6 10-12" stroke="#27ae60" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <p>We've sent a reset link to<br/><strong id="reset-email-display"></strong><br/>Check your inbox — it may take a minute.</p>
+    </div>
+  </div>
+</div>
+
+<!-- OTP VERIFICATION MODAL -->
+<div class="forgot-overlay" id="otp-overlay" style="display:none;position:fixed;inset:0;z-index:9000;align-items:center;justify-content:center;">
+  <div class="forgot-backdrop" onclick="closeOtp()"></div>
+  <div class="forgot-modal">
+    <button class="close-btn" onclick="closeOtp()">✕</button>
+    <h3>Verify your<br/><em>email.</em></h3>
+    <p>A verification code has been sent to your email. Enter it below to continue.</p>
+    
+    <div class="field">
+      <label for="otp-code">Verification Code</label>
+      <input type="text" id="otp-code" placeholder="123456" maxlength="6" style="text-align:center;letter-spacing:0.5em;font-weight:500;font-size:1.2rem;"/>
+      <span class="field-error" id="otp-error" style="display:none">Enter the 6-digit code</span>
+    </div>
+    
+    <button class="btn-submit" id="verify-btn" onclick="submitOtp()" style="margin-top:0">
+      <div class="spinner"></div>
+      <span class="btn-text">Verify & Sign In</span>
+    </button>
+  </div>
+</div>
+
+<script src="config.js"></script>
+<script src="session.js"></script>
+<script src="login.js"></script>
+<script>
+function togglePw(btn) {
+  const input = document.getElementById('password');
+  const show = input.type === 'password';
+  input.type = show ? 'text' : 'password';
+  btn.style.color = show ? 'var(--mid)' : 'var(--light)';
+}
+</script>
+</body>
+</html>

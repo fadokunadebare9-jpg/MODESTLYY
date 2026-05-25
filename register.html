@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Create Account — Modestly</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet"/>
+<script src="config.js"></script>
+<style>
+:root{
+  --ink:#0A0A0A;
+  --panel-bg:#0E0E0E;
+  --mid:#5A5A5A;
+  --muted:#8C8C8C;
+  --light:#C4C4C4;
+  --hairline:rgba(0,0,0,0.09);
+  --hairline-strong:rgba(0,0,0,0.14);
+  --focus-ring:rgba(10,10,10,0.07);
+  --gold:#8C8C8C;
+  --success:#2D7A4F;
+  --error:#B03030;
+  --warn:#9A6E1C;
+  --t:.24s cubic-bezier(.4,0,.2,1);
+  --r:8px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body{
+  background:#F8F7F5;color:var(--ink);
+  font-family:'DM Sans',sans-serif;font-weight:300;line-height:1.6;
+  min-height:100vh;display:grid;grid-template-columns:500px 1fr;
+}
+a{text-decoration:none;color:inherit}
+
+/* ═══ LEFT PANEL ═══ */
+.left-panel{
+  background:var(--panel-bg);
+  display:flex;flex-direction:column;
+  padding:3rem 2.8rem;
+  position:relative;overflow:hidden;
+  min-height:100vh;
+}
+.left-panel::before{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle,rgba(255,255,255,.028) 1px,transparent 1px);
+  background-size:22px 22px;pointer-events:none;
+}
+.left-panel::after{
+  content:'';position:absolute;
+  top:0;left:2.8rem;right:2.8rem;height:1px;
+  background:linear-gradient(90deg,transparent,var(--gold),transparent);
+  opacity:.55;
+}
+.arc{position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.04);pointer-events:none}
+.arc-1{width:600px;height:600px;bottom:-220px;left:-200px}
+.arc-2{width:360px;height:360px;bottom:-80px;left:-80px}
+.arc-gold{width:260px;height:260px;bottom:120px;right:-80px;border-color:rgba(184,151,90,.09)}
+
+.logo{
+  position:relative;z-index:1;
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.25rem;font-weight:400;
+  letter-spacing:.38em;text-transform:uppercase;
+  color:#fff;display:inline-block;
+}
+.logo-rule{display:block;width:2rem;height:1px;background:var(--gold);margin-top:.6rem;opacity:.65}
+
+.panel-body{
+  position:relative;z-index:1;flex:1;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:3rem 0;
+}
+.panel-eyebrow{
+  display:inline-flex;align-items:center;gap:.55rem;
+  font-size:.54rem;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:1.6rem;
+}
+.ep-dot{
+  width:4px;height:4px;border-radius:50%;background:var(--gold);
+  animation:epulse 2.6s ease-in-out infinite;
+}
+@keyframes epulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.2;transform:scale(.45)}}
+.panel-heading{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(2.4rem,3.2vw,3.2rem);font-weight:300;
+  color:#fff;line-height:1.02;margin-bottom:1.4rem;letter-spacing:-.01em;
+}
+.panel-heading em{font-style:italic;color:rgba(255,255,255,.28);font-weight:300}
+.panel-sub{font-size:.82rem;color:rgba(255,255,255,.3);line-height:2;max-width:300px}
+.panel-sub strong{color:rgba(255,255,255,.55);font-weight:400}
+
+.panel-quote{
+  position:relative;z-index:1;margin:2rem 0 0;
+  padding:1.2rem 1.4rem;
+  border-left:1px solid rgba(184,151,90,.32);
+  background:rgba(255,255,255,.022);
+  border-radius:0 6px 6px 0;
+}
+.qt{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.05rem;font-style:italic;font-weight:300;
+  color:rgba(255,255,255,.42);line-height:1.55;margin-bottom:.5rem;
+}
+.qa{font-size:.56rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.18)}
+
+.panel-proofs{
+  position:relative;z-index:1;
+  border-top:1px solid rgba(255,255,255,.06);
+  padding-top:1.8rem;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:1.2rem;
+}
+.proof{display:flex;flex-direction:column;gap:.2rem}
+.proof-val{
+  font-family:'Cormorant Garamond',serif;
+  font-size:1.4rem;font-weight:400;
+  color:rgba(255,255,255,.72);letter-spacing:-.01em;line-height:1;
+}
+.proof-lbl{font-size:.52rem;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.2)}
+
+/* ═══ RIGHT PANEL ═══ */
+.right-panel{
+  display:flex;align-items:center;justify-content:center;
+  padding:3rem 2rem;background:#F8F7F5;
+}
+.form-shell{
+  width:100%;max-width:420px;background:#fff;
+  border-radius:14px;
+  border:1px solid rgba(0,0,0,.07);
+  box-shadow:0 1px 2px rgba(0,0,0,.03),0 8px 32px rgba(0,0,0,.05),0 32px 64px rgba(0,0,0,.04);
+  padding:2.8rem 2.4rem 2.2rem;
+}
+
+/* ── Form header ── */
+.form-header{margin-bottom:2.2rem}
+.form-eyebrow{
+  font-size:.54rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:.55rem;
+  display:flex;align-items:center;gap:.65rem;
+}
+.form-eyebrow::before{
+  content:'';display:block;width:1.3rem;height:1px;background:var(--gold);opacity:.75;
+}
+.form-title{
+  font-family:'Cormorant Garamond',serif;
+  font-size:2.2rem;font-weight:300;line-height:1.05;
+  color:var(--ink);letter-spacing:-.01em;
+}
+.form-title em{font-style:italic;color:var(--mid)}
+
+/* ── Floating label fields ── */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:.8rem}
+.field{position:relative;margin-bottom:1rem}
+
+.field > label{
+  position:absolute;left:1rem;top:50%;transform:translateY(-50%);
+  font-size:.82rem;font-weight:300;color:var(--muted);
+  pointer-events:none;background:#fff;padding:0 .18rem;
+  transition:top var(--t),transform var(--t),font-size var(--t),color var(--t),letter-spacing var(--t);
+  white-space:nowrap;z-index:1;
+}
+.field:focus-within > label,
+.field.floated > label{
+  top:0;transform:translateY(-50%);
+  font-size:.52rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink);
+}
+
+.field input,.field select{
+  width:100%;border:1px solid var(--hairline-strong);
+  border-radius:var(--r);
+  padding:.9rem 1rem .52rem;
+  font-family:'DM Sans',sans-serif;font-size:.84rem;font-weight:300;
+  color:var(--ink);background:#fff;outline:none;
+  transition:border-color var(--t),box-shadow var(--t);
+  -webkit-appearance:none;appearance:none;
+}
+.field input::placeholder{color:transparent}
+.field select{
+  padding-right:2.6rem;cursor:pointer;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7' viewBox='0 0 11 7' fill='none'%3E%3Cpath d='M1 1L5.5 5.5L10 1' stroke='%238C8C8C' stroke-width='1.1' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 1rem center;
+}
+.field input:hover:not(:focus),
+.field select:hover:not(:focus){border-color:rgba(0,0,0,.22)}
+.field input:focus,.field select:focus{
+  border-color:var(--ink);box-shadow:0 0 0 3.5px var(--focus-ring);
+}
+.field input.err,.field select.err{
+  border-color:var(--error);box-shadow:0 0 0 3px rgba(176,48,48,.07);
+}
+.field-error{
+  font-size:.6rem;color:var(--error);
+  margin-top:.32rem;padding-left:.1rem;display:none;letter-spacing:.04em;
+}
+.field input.err ~ .field-error,
+.field select.err ~ .field-error{display:block}
+
+/* ── Password wrap (label inside pw-wrap) ── */
+.pw-wrap{position:relative}
+.pw-wrap input{padding-right:3rem}
+.pw-wrap > label{
+  position:absolute;left:1rem;top:50%;transform:translateY(-50%);
+  font-size:.82rem;font-weight:300;color:var(--muted);
+  pointer-events:none;background:#fff;padding:0 .18rem;
+  transition:top var(--t),transform var(--t),font-size var(--t),color var(--t),letter-spacing var(--t);
+  white-space:nowrap;z-index:1;
+}
+.field:focus-within .pw-wrap > label,
+.field.floated .pw-wrap > label{
+  top:0;transform:translateY(-50%);
+  font-size:.52rem;letter-spacing:.15em;text-transform:uppercase;color:var(--ink);
+}
+.toggle-pw{
+  position:absolute;right:.9rem;top:50%;transform:translateY(-50%);
+  background:none;border:none;cursor:pointer;
+  color:var(--light);padding:.25rem;
+  display:flex;align-items:center;
+  transition:color var(--t);
+}
+.toggle-pw:hover{color:var(--mid)}
+
+/* ── Strength meter ── */
+.pw-meter{margin-top:.55rem}
+.pw-bars{display:flex;gap:4px}
+.pw-bar{
+  height:2px;flex:1;border-radius:2px;
+  background:var(--hairline-strong);transition:background .4s ease;
+}
+.pw-bar.weak{background:#B03030}
+.pw-bar.fair{background:#C47A1E}
+.pw-bar.good{background:#2D7A4F}
+.pw-bar.strong{background:#1A5C38}
+.pw-score{
+  font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);margin-top:.3rem;transition:color .3s;
+}
+
+/* ── Submit ── */
+.btn-wrap{margin-top:.85rem}
+.btn-submit{
+  width:100%;background:var(--ink);color:#fff;
+  font-family:'DM Sans',sans-serif;font-weight:500;font-size:.66rem;
+  letter-spacing:.18em;text-transform:uppercase;
+  padding:1.1rem;border-radius:var(--r);border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:.65rem;
+  transition:transform var(--t),opacity var(--t),box-shadow var(--t);
+  position:relative;overflow:hidden;will-change:transform;
+}
+.btn-submit::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(105deg,transparent 35%,rgba(255,255,255,.09) 50%,transparent 65%);
+  transform:translateX(-120%);transition:transform .6s ease;
+}
+.btn-submit:hover::before{transform:translateX(120%)}
+.btn-submit:hover{opacity:.86;box-shadow:0 8px 28px rgba(10,10,10,.2);transform:translateY(-2px)}
+.btn-submit:active{transform:translateY(0);box-shadow:none;opacity:1}
+.spinner{
+  display:none;width:13px;height:13px;
+  border:1.5px solid rgba(255,255,255,.22);border-top-color:#fff;
+  border-radius:50%;animation:spin .75s linear infinite;flex-shrink:0;
+}
+.btn-submit.loading .spinner{display:block}
+.btn-submit.loading .btn-label{opacity:.38}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Form footer ── */
+.form-footer{
+  margin-top:1.5rem;padding-top:1.4rem;
+  border-top:1px solid var(--hairline);
+  display:flex;flex-direction:column;align-items:center;gap:.65rem;
+}
+.signin-line{font-size:.76rem;color:var(--muted)}
+.signin-line a{
+  color:var(--ink);font-weight:400;
+  border-bottom:1px solid var(--hairline-strong);padding-bottom:.06rem;
+  transition:border-color var(--t);
+}
+.signin-line a:hover{border-color:var(--ink)}
+.terms-line{font-size:.62rem;color:var(--muted);text-align:center;line-height:1.8}
+.terms-line a{color:var(--mid);border-bottom:1px solid var(--hairline)}
+.terms-line a:hover{color:var(--ink)}
+
+/* ── Success state ── */
+.success-state{
+  display:none;flex-direction:column;align-items:center;
+  text-align:center;padding:1.2rem 0;gap:1.2rem;
+}
+.success-icon{
+  width:52px;height:52px;border-radius:50%;
+  background:#F0F7F3;border:1px solid rgba(45,122,79,.14);
+  display:flex;align-items:center;justify-content:center;
+}
+.success-icon svg{stroke:#2D7A4F}
+.success-h{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:300;color:var(--ink)}
+.success-p{font-size:.78rem;color:var(--muted);line-height:1.8;max-width:260px}
+
+/* ── Animations ── */
+.fade-up{opacity:0;transform:translateY(12px);animation:fu .5s cubic-bezier(.4,0,.2,1) forwards}
+@keyframes fu{to{opacity:1;transform:none}}
+.d0{animation-delay:.04s}.d1{animation-delay:.10s}.d2{animation-delay:.16s}
+.d3{animation-delay:.22s}.d4{animation-delay:.28s}.d5{animation-delay:.34s}
+.d6{animation-delay:.40s}.d7{animation-delay:.46s}.d8{animation-delay:.52s}
+
+/* ── Responsive ── */
+/* ── OTP Modal ── */
+.otp-overlay {
+  display: none; position: fixed; inset: 0; z-index: 9999;
+  align-items: center; justify-content: center;
+  background: rgba(10,10,10,0.4); backdrop-filter: blur(8px);
+}
+.otp-modal {
+  background: #fff; padding: 3rem 2.5rem; border-radius: 14px;
+  width: 90%; max-width: 400px; text-align: center;
+  box-shadow: 0 32px 64px rgba(0,0,0,0.15);
+  animation: modalIn .3s cubic-bezier(.4,0,.2,1);
+}
+@keyframes modalIn { from { opacity: 0; transform: translateY(20px); } }
+
+.otp-modal h3 { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; font-weight: 300; margin-bottom: .6rem; }
+.otp-modal p { font-size: .82rem; color: var(--muted); margin-bottom: 2rem; line-height: 1.7; }
+.otp-modal .field { margin-bottom: 1.5rem; }
+.otp-modal .field input { text-align: center; letter-spacing: .6em; font-size: 1.3rem; font-weight: 500; }
+
+.btn-secondary {
+  background: var(--ink); color: #fff; width: 100%; padding: 1.1rem; border: none; border-radius: var(--r);
+  font-family: 'DM Sans', sans-serif; font-weight: 500; font-size: .66rem; letter-spacing: .18em; text-transform: uppercase;
+  cursor: pointer; transition: all var(--t); display: flex; align-items: center; justify-content: center; gap: .6rem;
+}
+.btn-secondary:hover { opacity: .86; }
+
+.otp-resend { font-size: .7rem; color: var(--muted); margin-top: 1.5rem; }
+.otp-resend a { color: var(--ink); border-bottom: 1px solid var(--hairline-strong); }
+
+@media(max-width:820px){
+  body{grid-template-columns:1fr;grid-template-rows:auto 1fr}
+  .left-panel{padding:2rem 2rem 1.8rem;min-height:auto}
+  .panel-body{padding:1.8rem 0;flex:none}
+  .panel-quote{display:none}
+  .panel-heading{font-size:2rem}
+  .panel-sub{display:none}
+  .right-panel{padding:2rem 1.25rem;align-items:flex-start}
+  .form-shell{max-width:100%;padding:2rem 1.5rem 1.8rem}
+}
+@media(max-width:440px){.form-row{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- LEFT PANEL -->
+<div class="left-panel">
+  <div class="arc arc-1"></div>
+  <div class="arc arc-2"></div>
+  <div class="arc arc-gold"></div>
+
+  <a href="index.html" class="logo">Modestly<span class="logo-rule"></span></a>
+
+  <div class="panel-body">
+    <div class="panel-eyebrow">
+      <div class="ep-dot"></div>
+      Live · All 36 States + FCT
+    </div>
+    <h2 class="panel-heading">Nigerian fashion,<br/><em>made personal.</em></h2>
+    <p class="panel-sub">
+      Join thousands of Nigerians discovering original designer pieces —
+      <strong>delivered to your door in under 60 minutes.</strong>
+      Try before you pay. Return in seconds.
+    </p>
+    <div class="panel-quote">
+      <p class="qt">"I received my Adire set within the hour. The quality was extraordinary — this is what Nigerian fashion deserves."</p>
+      <p class="qa">Chidinma A. · Lagos Island</p>
+    </div>
+  </div>
+
+  <div class="panel-proofs">
+    <div class="proof"><span class="proof-val">60 min</span><span class="proof-lbl">Delivery</span></div>
+    <div class="proof"><span class="proof-val">Escrow</span><span class="proof-lbl">Protected pay</span></div>
+    <div class="proof"><span class="proof-val">100%</span><span class="proof-lbl">NG designers</span></div>
+  </div>
+</div>
+
+<!-- RIGHT PANEL -->
+<div class="right-panel">
+  <div class="form-shell">
+
+    <div class="form-header fade-up d0">
+      <p class="form-eyebrow">Get started</p>
+      <h1 class="form-title">Create your<br/><em>account.</em></h1>
+    </div>
+
+    <form id="reg-form" novalidate>
+
+      <div class="form-row fade-up d1">
+        <div class="field" id="f-fname">
+          <input type="text" id="fname" name="fname" autocomplete="given-name" placeholder=" "/>
+          <label for="fname">First name</label>
+          <span class="field-error">Required</span>
+        </div>
+        <div class="field" id="f-lname">
+          <input type="text" id="lname" name="lname" autocomplete="family-name" placeholder=" "/>
+          <label for="lname">Last name</label>
+          <span class="field-error">Required</span>
+        </div>
+      </div>
+
+      <div class="field fade-up d2" id="f-email">
+        <input type="email" id="email" name="email" autocomplete="email" placeholder=" "/>
+        <label for="email">Email address</label>
+        <span class="field-error">Enter a valid email</span>
+      </div>
+
+      <div class="field fade-up d3" id="f-phone">
+        <input type="tel" id="phone" name="phone" autocomplete="tel" placeholder=" "/>
+        <label for="phone">Phone number (+234…)</label>
+        <span class="field-error">Enter a valid number</span>
+      </div>
+
+      <div class="field fade-up d3" id="f-address">
+        <input type="text" id="address" name="address" autocomplete="street-address" placeholder=" "/>
+        <label for="address">Street Address</label>
+        <span class="field-error">Please enter your full address</span>
+      </div>
+
+      <div class="field floated fade-up d4" id="f-state">
+        <select id="state" name="state">
+          <option value="" disabled selected></option>
+          <option>Abia</option><option>Adamawa</option><option>Akwa Ibom</option>
+          <option>Anambra</option><option>Bauchi</option><option>Bayelsa</option>
+          <option>Benue</option><option>Borno</option><option>Cross River</option>
+          <option>Delta</option><option>Ebonyi</option><option>Edo</option>
+          <option>Ekiti</option><option>Enugu</option><option>FCT — Abuja</option>
+          <option>Gombe</option><option>Imo</option><option>Jigawa</option>
+          <option>Kaduna</option><option>Kano</option><option>Katsina</option>
+          <option>Kebbi</option><option>Kogi</option><option>Kwara</option>
+          <option>Lagos</option><option>Nasarawa</option><option>Niger</option>
+          <option>Ogun</option><option>Ondo</option><option>Osun</option>
+          <option>Oyo</option><option>Plateau</option><option>Rivers</option>
+          <option>Sokoto</option><option>Taraba</option><option>Yobe</option>
+          <option>Zamfara</option>
+        </select>
+        <label for="state">State</label>
+        <span class="field-error">Select a state</span>
+      </div>
+
+      <div class="field fade-up d5" id="f-password">
+        <div class="pw-wrap">
+          <input type="password" id="password" name="password" autocomplete="new-password" placeholder=" "/>
+          <label for="password">Password</label>
+          <button type="button" class="toggle-pw" aria-label="Toggle password" data-id="password">
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <ellipse class="e-lid" cx="10" cy="10" rx="8" ry="5.5" stroke="currentColor" stroke-width="1.1"/>
+              <circle class="e-iris" cx="10" cy="10" r="2.1" stroke="currentColor" stroke-width="1.1"/>
+              <line class="e-slash" x1="3.5" y1="3.5" x2="16.5" y2="16.5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" style="display:none"/>
+            </svg>
+          </button>
+        </div>
+        <div class="pw-meter">
+          <div class="pw-bars">
+            <div class="pw-bar" id="b1"></div><div class="pw-bar" id="b2"></div>
+            <div class="pw-bar" id="b3"></div><div class="pw-bar" id="b4"></div>
+          </div>
+          <div class="pw-score" id="pw-score"></div>
+        </div>
+        <span class="field-error">Min. 8 characters required</span>
+      </div>
+
+      <div class="field fade-up d6" id="f-confirm">
+        <div class="pw-wrap">
+          <input type="password" id="confirm" name="confirm" autocomplete="new-password" placeholder=" "/>
+          <label for="confirm">Confirm password</label>
+          <button type="button" class="toggle-pw" aria-label="Toggle confirm password" data-id="confirm">
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <ellipse class="e-lid" cx="10" cy="10" rx="8" ry="5.5" stroke="currentColor" stroke-width="1.1"/>
+              <circle class="e-iris" cx="10" cy="10" r="2.1" stroke="currentColor" stroke-width="1.1"/>
+              <line class="e-slash" x1="3.5" y1="3.5" x2="16.5" y2="16.5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" style="display:none"/>
+            </svg>
+          </button>
+        </div>
+        <span class="field-error">Passwords do not match</span>
+      </div>
+
+      <div class="btn-wrap fade-up d7">
+        <button type="submit" class="btn-submit" id="btn-submit">
+          <div class="spinner"></div>
+          <span class="btn-label">Create Account</span>
+        </button>
+      </div>
+
+    </form>
+
+    <div class="success-state" id="success-state">
+      <div class="success-icon">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+          <path d="M5 13l4 4L19 7" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <p class="success-h">Welcome to Modestly.</p>
+        <p class="success-p">Your account has been created. A confirmation has been sent to your email.</p>
+      </div>
+    </div>
+
+    <div class="form-footer fade-up d8">
+      <p class="signin-line">Already have an account? <a href="login.html">Sign in</a></p>
+      <p class="terms-line">By creating an account you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- OTP MODAL -->
+<div class="otp-overlay" id="otp-overlay">
+  <div class="otp-modal">
+    <h3>Verify your<br/><em>email.</em></h3>
+    <p>We've sent a 6-digit code to <strong id="display-email"></strong>. Enter it to activate your account.</p>
+    
+    <div class="field">
+      <input type="text" id="otp-code" maxlength="6" placeholder="000000"/>
+      <div class="field-error" id="otp-error">Invalid code</div>
+    </div>
+
+    <button class="btn-secondary" id="btn-verify" onclick="submitOtp()">
+      <div class="spinner"></div>
+      <span class="btn-label">Verify Account</span>
+    </button>
+
+    <div class="otp-resend">
+      Didn't get it? <a href="#" onclick="resendOtp(event)">Resend Code</a>
+    </div>
+  </div>
+</div>
+
+<script>
+/* Floating labels */
+function sync(el){
+  const f=el.closest('.field');if(!f)return;
+  f.classList.toggle('floated', el.tagName==='SELECT' ? el.value!=='' : el.value.length>0);
+}
+document.querySelectorAll('.field input,.field select').forEach(el=>{
+  ['input','change','blur'].forEach(ev=>el.addEventListener(ev,()=>sync(el)));
+  sync(el);
+});
+
+/* Toggle eye */
+document.querySelectorAll('.toggle-pw').forEach(btn=>{
+  btn.addEventListener('click',function(){
+    const inp=document.getElementById(this.dataset.id);
+    const show=inp.type==='password';
+    inp.type=show?'text':'password';
+    const sl=this.querySelector('.e-slash'),ir=this.querySelector('.e-iris');
+    if(sl)sl.style.display=show?'block':'none';
+    if(ir)ir.style.opacity=show?'.2':'1';
+    this.style.color=show?'var(--mid)':'var(--light)';
+  });
+});
+
+/* Password strength */
+const pwI=document.getElementById('password');
+const bars=['b1','b2','b3','b4'].map(id=>document.getElementById(id));
+const pwS=document.getElementById('pw-score');
+const CLS=['','weak','fair','good','strong'];
+const NMS=['','Weak','Fair','Good','Strong'];
+const CLR=['','#B03030','#C47A1E','#2D7A4F','#1A5C38'];
+pwI.addEventListener('input',function(){
+  const v=this.value;let s=0;
+  if(v.length>=8)s++;if(/[A-Z]/.test(v))s++;if(/[0-9]/.test(v))s++;if(/[^A-Za-z0-9]/.test(v))s++;
+  bars.forEach((b,i)=>{b.className='pw-bar';if(i<s&&v.length)b.classList.add(CLS[s]);});
+  pwS.textContent=v.length?NMS[s]:'';pwS.style.color=CLR[s]||'var(--muted)';
+  sync(this);
+});
+
+/* Magnetic button */
+const btn=document.getElementById('btn-submit');
+btn.addEventListener('mousemove',function(e){
+  const r=this.getBoundingClientRect();
+  const mx=((e.clientX-r.left)/r.width-.5)*10;
+  const my=((e.clientY-r.top)/r.height-.5)*6;
+  this.style.transform=`translateY(-2px) translate(${mx*.3}px,${my*.3}px)`;
+});
+btn.addEventListener('mouseleave',function(){this.style.transform='';});
+
+/* Validation */
+const RULES={
+  fname:{test:v=>v.trim().length>0},
+  lname:{test:v=>v.trim().length>0},
+  email:{test:v=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)},
+  phone:{test:v=>v.replace(/\D/g,'').length>=7},
+  address:{test:v=>v.trim().length>0},
+  state:{test:v=>v.trim().length>0},
+  password:{test:v=>v.length>=8},
+};
+
+document.getElementById('reg-form').addEventListener('submit', async function(e){
+  e.preventDefault();let ok=true;
+  Object.entries(RULES).forEach(([id,r])=>{
+    const el=document.getElementById(id);
+    const v=r.test(el.value);
+    el.classList.toggle('err',!v);if(!v)ok=false;
+  });
+  const pw=document.getElementById('password').value;
+  const cf=document.getElementById('confirm');
+  const mo=cf.value===pw&&cf.value.length>0;
+  cf.classList.toggle('err',!mo);if(!mo)ok=false;
+  
+  if(!ok)return;
+
+  const btn=document.getElementById('btn-submit');
+  btn.classList.add('loading');btn.disabled=true;
+  
+  // Real API Integration
+  try {
+    const payload = {
+      first_name: document.getElementById('fname').value.trim(),
+      last_name: document.getElementById('lname').value.trim(),
+      email: document.getElementById('email').value.trim().toLowerCase(),
+      phone: document.getElementById('phone').value.trim(),
+      address: `${document.getElementById('address').value.trim()}, ${document.getElementById('state').value}`,
+      password: pw
+    };
+
+    const response = await fetch(`${CONFIG.API_BASE_URL}/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || 'Registration failed');
+
+    // Show OTP Modal
+    document.getElementById('display-email').textContent = payload.email;
+    document.getElementById('otp-overlay').style.display = 'flex';
+
+  } catch (err) {
+    if (err.message === 'Failed to fetch') {
+      alert('Connection failed. The server might be waking up (Render cold start). Please wait 10 seconds and try again.');
+    } else {
+      alert(err.message);
+    }
+  } finally {
+    btn.classList.remove('loading');btn.disabled=false;
+  }
+});
+
+async function submitOtp() {
+  const code = document.getElementById('otp-code').value;
+  const email = document.getElementById('display-email').textContent;
+  const btn = document.getElementById('btn-verify');
+  const err = document.getElementById('otp-error');
+
+  if (code.length !== 6) {
+    err.style.display = 'block';
+    return;
+  }
+  err.style.display = 'none';
+  btn.classList.add('loading');btn.disabled = true;
+
+  try {
+    const data = await CONFIG.apiFetch('/auth/verify-email', {
+      method: 'POST',
+      body: JSON.stringify({ email, otp: code })
+    });
+
+    localStorage.setItem(CONFIG.TOKEN_KEY, data.token);
+    localStorage.setItem(CONFIG.USER_KEY, JSON.stringify(data.user));
+
+    btn.querySelector('.btn-label').textContent = '✓ Verified';
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    const redirectParam = urlParams.get('redirect');
+    const targetUrl = redirectParam ? `login.html?redirect=${encodeURIComponent(redirectParam)}` : 'login.html';
+
+    setTimeout(() => {
+      window.location.href = targetUrl;
+    }, 1200);
+
+  } catch (err) {
+    btn.classList.remove('loading');btn.disabled = false;
+    alert(err.message);
+  }
+}
+
+async function resendOtp(e) {
+  e.preventDefault();
+  const email = document.getElementById('display-email').textContent;
+  try {
+    const data = await CONFIG.apiFetch('/auth/resend-otp', {
+      method: 'POST',
+      body: JSON.stringify({ email })
+    });
+    alert(data.message);
+  } catch (err) {
+    alert(err.message);
+  }
+}
+
+document.querySelectorAll('.field input,.field select').forEach(el=>{
+  ['input','change'].forEach(ev=>el.addEventListener(ev,()=>el.classList.remove('err')));
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const redirectParam = urlParams.get('redirect');
+  if (redirectParam) {
+    const signinLink = document.querySelector('.signin-line a');
+    if (signinLink) signinLink.href = `login.html?redirect=${encodeURIComponent(redirectParam)}`;
+  }
+});
+</script>
+</body>
+</html>
